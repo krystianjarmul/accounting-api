@@ -13,6 +13,7 @@ jobs = Table(
     Column('employees', String(255)),
     Column('date', Date),
     Column('start_time', Time),
+    Column('end_time', Time),
     Column('hours_number', Float),
 )
 

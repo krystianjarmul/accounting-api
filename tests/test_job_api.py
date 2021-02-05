@@ -21,6 +21,7 @@ def test_creating_a_job_successfully(client):
     assert json_data['date'] == payload['date']
     assert json_data['start_time'] == payload['start_time']
     assert json_data['hours_number'] == payload['hours_number']
+    assert json_data['end_time'] == '14:00:00'
 
 
 def test_creating_a_job_fails_with_invalid_payload(client):

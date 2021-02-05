@@ -35,16 +35,16 @@ def add_job():
             time.fromisoformat(request.json['start_time']),
             request.json['hours_number'],
         )
-        repo = repository.SqlAlchemyRepository(session)
-        repo.add(job)
-        session.commit()
-
-        job_schema = JobSchema()
-
-        return job_schema.dump(job), 201
-
-    except Exception as e:
+    except ValueError as e:
         return jsonify({'error': str(e)}), 400
+
+    repo = repository.SqlAlchemyRepository(session)
+    repo.add(job)
+    session.commit()
+
+    job_schema = JobSchema()
+
+    return job_schema.dump(job), 201
 
 
 @app.route('/jobs/', methods=['GET'])
