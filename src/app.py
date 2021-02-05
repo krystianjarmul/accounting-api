@@ -1,31 +1,25 @@
-import os
+import sys
 from datetime import time, date
 
 from flask import Flask, jsonify, request
-from sqlalchemy.orm import sessionmaker
 
-from .config import get_production_engine, get_test_engine
-from .orm import metadata, start_mappers
+from .orm import start_mappers
 from .serializers import JobSchema
-from sqlalchemy import create_engine
-
 from . import model
 from . import repository
-
-TEST_ENV = int(os.environ.get('TEST', 1))
-if TEST_ENV:
-    engine = get_test_engine()
-else:
-    engine = get_production_engine()
-
-start_mappers()
-session = sessionmaker(bind=engine)()
-metadata.create_all(engine)
+from .database import get_session
 
 app = Flask(__name__)
 
+if 'pytest' in sys.modules:
+    session = get_session('sqlite:///:memory:')
+else:
+    session = get_session('sqlite:///sqlite3.db')
 
-@app.route('/jobs/create', methods=['POST'])
+start_mappers()
+
+
+@app.route('/jobs/', methods=['POST'])
 def add_job():
     try:
         job = model.Job(
@@ -55,3 +49,8 @@ def list_jobs():
 
     jobs_schema = JobSchema(many=True)
     return jsonify(jobs_schema.dump(jobs)), 200
+
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    session.remove()

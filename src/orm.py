@@ -15,6 +15,7 @@ jobs = Table(
     Column('start_time', Time),
     Column('end_time', Time),
     Column('hours_number', Float),
+    Column('reference', String(50)),
 )
 
 

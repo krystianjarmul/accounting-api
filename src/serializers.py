@@ -9,3 +9,4 @@ class JobSchema(Schema):
     start_time = fields.Time()
     hours_number = fields.Float()
     end_time = fields.Time()
+    reference = fields.String()

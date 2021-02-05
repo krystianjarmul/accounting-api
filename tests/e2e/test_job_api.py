@@ -1,6 +1,6 @@
 from src import repository
 
-JOBS_URL = 'jobs/create'
+JOBS_URL = '/jobs/'
 
 
 def test_creating_a_job_successfully(client):
