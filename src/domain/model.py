@@ -38,4 +38,3 @@ class Job:
         if not isinstance(other, Job):
             return False
         return other.reference == self.reference
-# TODO separate test env from dev

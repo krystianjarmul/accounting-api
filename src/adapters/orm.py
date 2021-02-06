@@ -1,8 +1,8 @@
 from sqlalchemy import MetaData, Table, Column, String, Integer, Date, Time, \
     Float
-from sqlalchemy.orm import mapper, relationship
+from sqlalchemy.orm import mapper
 
-from . import model
+from src.domain import model
 
 metadata = MetaData()
 

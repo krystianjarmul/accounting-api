@@ -1,5 +1,3 @@
-from src import repository
-
 JOBS_URL = '/jobs/'
 
 

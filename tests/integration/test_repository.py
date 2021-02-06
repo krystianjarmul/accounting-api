@@ -1,7 +1,7 @@
 from datetime import date, time
 
-from src import model
-from src import repository
+from src.domain import model
+from src.adapters import repository
 
 
 def test_repository_can_save_jobs(session):

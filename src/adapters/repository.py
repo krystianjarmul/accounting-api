@@ -1,7 +1,7 @@
 import abc
 from typing import List
 
-from . import model
+from src.domain import model
 
 
 class AbstractRepository(abc.ABC):
@@ -26,8 +26,10 @@ class SqlAlchemyRepository(AbstractRepository):
     def __init__(self, session):
         self.session = session
 
-    def _get(self, job_id):
-        return self.session.query(model.Job).filter_by(job_id=job_id).one()
+    def _get(self, reference):
+        return self.session.query(model.Job).filter_by(
+            reference=reference
+        ).one()
 
     def _add(self, job):
         self.session.add(job)

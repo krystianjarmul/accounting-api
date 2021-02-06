@@ -1,7 +1,6 @@
 from datetime import date, time
 
-from src import model
-from src.app import session
+from src.domain import model
 
 
 def test_jobs_mapper_can_load_jobs(session):

@@ -1,6 +1,6 @@
 from datetime import date, time
 
-from src import model
+from src.domain import model
 
 
 def test_job_counts_end_time_based_on_hours_and_start_time():

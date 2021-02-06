@@ -3,11 +3,11 @@ from datetime import time, date
 
 from flask import Flask, jsonify, request
 
-from .orm import start_mappers
-from .serializers import JobSchema
-from . import model
-from . import repository
-from .database import get_session
+from src.adapters.orm import start_mappers
+from src.serializers import JobSchema
+from src.domain import model
+from src.adapters import repository
+from src.database import get_session
 
 app = Flask(__name__)
 
