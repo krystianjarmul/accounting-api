@@ -16,3 +16,10 @@ def add_job(
 
     job_schema = JobSchema()
     return job_schema.dump(job)
+
+
+def list_jobs(repo: AbstractRepository) -> str:
+    jobs = repo.list()
+    jobs_schema = JobSchema(many=True)
+
+    return jobs_schema.dump(jobs)

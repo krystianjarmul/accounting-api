@@ -45,12 +45,10 @@ def add_job():
 
 @app.route('/jobs/', methods=['GET'])
 def list_jobs():
-    session.commit()
     repo = repository.SqlAlchemyRepository(session)
-    jobs = repo.list()
+    jobs_jsons = services.list_jobs(repo)
 
-    jobs_schema = JobSchema(many=True)
-    return jsonify(jobs_schema.dump(jobs)), 200
+    return jsonify(jobs_jsons), 200
 
 
 @app.teardown_appcontext
