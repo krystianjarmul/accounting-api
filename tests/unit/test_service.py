@@ -30,7 +30,7 @@ class FakeRepository(repository.AbstractRepository):
 def test_add_job():
     repo, session = FakeRepository([]), FakeSession()
 
-    services.add_job(
+    services.create_job(
         3, [1, 3, 6], date(2021, 1, 2), time(8, 30), 1.5, repo, session
     )
 

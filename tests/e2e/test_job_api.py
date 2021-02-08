@@ -22,7 +22,7 @@ def add_job():
         'hours_number': 2.0
     }
     repo = repository.SqlAlchemyRepository(session)
-    services.add_job(**job_attrs, repo=repo, session=session)
+    services.create_job(**job_attrs, repo=repo, session=session)
 
 
 def test_creating_a_job_successfully(client):

@@ -6,7 +6,7 @@ from src.domain import model
 from src.serializers import JobSchema
 
 
-def add_job(
+def create_job(
         customer: int, employees: List[int], date: date, start_time: time,
         hours_number: float, repo: AbstractRepository, session
 ) -> str:
@@ -18,7 +18,7 @@ def add_job(
     return job_schema.dump(job)
 
 
-def list_jobs(repo: AbstractRepository) -> str:
+def list_jobs(repo: AbstractRepository) -> List[str]:
     jobs = repo.list()
     jobs_schema = JobSchema(many=True)
 

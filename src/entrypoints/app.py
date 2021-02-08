@@ -22,7 +22,7 @@ start_mappers()
 
 
 @app.route('/jobs/', methods=['POST'])
-def add_job():
+def create_job():
     try:
         correct_date = date.fromisoformat(request.json['date'])
         correct_time = time.fromisoformat(request.json['start_time'])
@@ -30,7 +30,7 @@ def add_job():
         return jsonify({'error': str(e)}), 400
 
     repo = repository.SqlAlchemyRepository(session)
-    job_json = services.add_job(
+    job_json = services.create_job(
         request.json['customer'],
         request.json['employees'],
         correct_date,
