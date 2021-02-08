@@ -28,15 +28,9 @@ class FakeRepository(repository.AbstractRepository):
 
 
 def test_add_job():
-    job = model.Job(3, [1, 5, 6], date(2021, 1, 2), time(8, 30), 1.5)
-    repo = FakeRepository([])
-    services.add_job(job, repo, FakeSession())
-    assert repo.get(job.reference) is not None
-
-
-def test_commits():
-    job = model.Job(3, [1, 5, 6], date(2021, 1, 2), time(8, 30), 1.5)
-    repo = FakeRepository([])
-    session = FakeSession()
-    services.add_job(job, repo, session)
+    repo, session = FakeRepository([]), FakeSession()
+    services.add_job(
+        3, [1, 3, 6], date(2021, 1, 2), time(8, 30), 1.5, repo, session
+    )
+    assert repo.get('313620210102') is not None
     assert session.committed is True

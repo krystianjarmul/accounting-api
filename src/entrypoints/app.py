@@ -4,10 +4,12 @@ from datetime import time, date
 from flask import Flask, jsonify, request
 
 from src.adapters.orm import start_mappers
-from src.serializers import JobSchema
+
 from src.domain import model
 from src.adapters import repository
 from src.database import get_session
+from src.serializers import JobSchema
+from src.service_layer import services
 
 app = Flask(__name__)
 
@@ -22,23 +24,23 @@ start_mappers()
 @app.route('/jobs/', methods=['POST'])
 def add_job():
     try:
-        job = model.Job(
-            request.json['customer'],
-            request.json['employees'],
-            date.fromisoformat(request.json['date']),
-            time.fromisoformat(request.json['start_time']),
-            request.json['hours_number'],
-        )
+        correct_date = date.fromisoformat(request.json['date'])
+        correct_time = time.fromisoformat(request.json['start_time'])
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
 
     repo = repository.SqlAlchemyRepository(session)
-    repo.add(job)
-    session.commit()
+    job_json = services.add_job(
+        request.json['customer'],
+        request.json['employees'],
+        correct_date,
+        correct_time,
+        request.json['hours_number'],
+        repo,
+        session
+    )
 
-    job_schema = JobSchema()
-
-    return job_schema.dump(job), 201
+    return job_json, 201
 
 
 @app.route('/jobs/', methods=['GET'])

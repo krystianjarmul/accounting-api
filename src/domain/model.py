@@ -23,7 +23,7 @@ class Job:
 
     def _employees_to_string(self):
         if isinstance(self._employees, str):
-            return self._employees
+            self._employees = self._employees.split(',')
         return ','.join([str(e) for e in self._employees])
 
     def _get_reference(self):
