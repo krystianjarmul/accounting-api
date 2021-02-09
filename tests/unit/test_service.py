@@ -2,7 +2,7 @@ from datetime import date, time
 
 from src.adapters import repository
 from src.domain import model
-from src.service_layer import services
+from src.service_layer import services, unit_of_work
 
 
 class FakeSession:
@@ -27,25 +27,34 @@ class FakeRepository(repository.AbstractRepository):
         return list(self._jobs)
 
 
+class FakeUnitOfWork(unit_of_work.AbstractUnitOfWork):
+
+    def __init__(self):
+        self.jobs = FakeRepository([])
+        self.committed = False
+
+    def commit(self):
+        self.committed = True
+
+    def rollback(self):
+        pass
+
+
 def test_add_job():
-    repo, session = FakeRepository([]), FakeSession()
+    uow = FakeUnitOfWork()
 
-    services.create_job(
-        3, [1, 3, 6], date(2021, 1, 2), time(8, 30), 1.5, repo, session
-    )
+    services.create_job(3, [1, 3, 6], date(2021, 1, 2), time(8, 30), 1.5, uow)
 
-    assert repo.get('313620210102') is not None
-    assert session.committed is True
+    assert uow.jobs.get('313620210102') is not None
+    assert uow.committed is True
 
 
 def test_list_job():
     job = model.Job(3, [1, 3, 6], date(2021, 1, 2), time(8, 30), 1.5)
-    repo, session = FakeRepository([job]), FakeSession()
+    uow = FakeUnitOfWork()
+    uow.jobs = FakeRepository([job])
 
-    jobs_jsons = services.list_jobs(repo)
+    jobs_jsons = services.list_jobs(uow)
 
     assert len(jobs_jsons) == 1
-    assert jobs_jsons[0].get('customer') is not None
-    assert jobs_jsons[0].get('date') is not None
-    assert jobs_jsons[0].get('end_time') is not None
-    assert jobs_jsons[0].get('reference') is not None
+    assert jobs_jsons[0].get('reference') == '313620210102'

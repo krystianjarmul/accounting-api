@@ -3,7 +3,7 @@ from datetime import date, time
 from src.adapters import repository
 from src.domain import model
 from src.entrypoints.app import session
-from src.service_layer import services
+from src.service_layer import services, unit_of_work
 
 JOBS_URL = '/jobs/'
 
@@ -21,8 +21,8 @@ def add_job():
         'start_time': time(10, 30),
         'hours_number': 2.0
     }
-    repo = repository.SqlAlchemyRepository(session)
-    services.create_job(**job_attrs, repo=repo, session=session)
+    uow = unit_of_work.SqlAlchemyUnitOfWork(session)
+    services.create_job(**job_attrs, uow=uow)
 
 
 def test_creating_a_job_successfully(client):

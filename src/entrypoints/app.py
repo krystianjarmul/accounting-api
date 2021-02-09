@@ -8,8 +8,7 @@ from src.adapters.orm import start_mappers
 from src.domain import model
 from src.adapters import repository
 from src.database import get_session
-from src.serializers import JobSchema
-from src.service_layer import services
+from src.service_layer import services, unit_of_work
 
 app = Flask(__name__)
 
@@ -29,15 +28,14 @@ def create_job():
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
 
-    repo = repository.SqlAlchemyRepository(session)
+    uow = unit_of_work.SqlAlchemyUnitOfWork(session)
     job_json = services.create_job(
         request.json['customer'],
         request.json['employees'],
         correct_date,
         correct_time,
         request.json['hours_number'],
-        repo,
-        session
+        uow
     )
 
     return job_json, 201
@@ -45,8 +43,9 @@ def create_job():
 
 @app.route('/jobs/', methods=['GET'])
 def list_jobs():
-    repo = repository.SqlAlchemyRepository(session)
-    jobs_jsons = services.list_jobs(repo)
+    uow = unit_of_work.SqlAlchemyUnitOfWork(session)
+    with uow:
+        jobs_jsons = services.list_jobs(uow)
 
     return jsonify(jobs_jsons), 200
 

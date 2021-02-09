@@ -1,3 +1,4 @@
+from __future__ import annotations
 import abc
 
 from sqlalchemy import create_engine
@@ -9,6 +10,9 @@ from src.adapters import repository
 
 class AbstractUnitOfWork(abc.ABC):
     jobs: repository.AbstractRepository
+
+    def __enter__(self) -> AbstractUnitOfWork:
+        return self
 
     def __exit__(self, *args):
         self.rollback()
