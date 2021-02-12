@@ -1,2 +1,2 @@
 # accounting-api
-An REST API for the cleaning service app, written in python
+An REST API for the cleaning service app, using Domain Driven Design, in progress
